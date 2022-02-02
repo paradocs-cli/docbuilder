@@ -46,18 +46,19 @@ func GenerateDocFxStructure(r Repositories) error{
 	for _,v := range dirs {
 		err := os.Mkdir(fmt.Sprintf("../DocFxData/%s", v), 0644)
 		if err != nil {
-			return fmt.Errorf("error making directories for os.Mkdir")
+			return fmt.Errorf(err.Error())
 
 		}
 		data, err := gendocs.GetData(v)
 		if err != nil {
 			log.Fatalf(err.Error())
 		}
-		err = os.Chdir(fmt.Sprintf("../DocFxData/%s", v))
+		err = os.Chdir("../DocFxData")
 		if err != nil {
-			return fmt.Errorf("error switching directories for markdown creation")
+			return fmt.Errorf(err.Error())
 
 		}
+
 		gendocs.WriteMarkdownTerra(data)
 	}
 	return nil
