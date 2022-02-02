@@ -6,6 +6,7 @@ import (
 	"github.com/paradocs-cli/gengit"
 	"log"
 	"os"
+	"path/filepath"
 )
 
 type Repositories []git.Repository
@@ -44,21 +45,16 @@ func GenerateDocFxStructure(r Repositories) error{
 		return fmt.Errorf("error reading directories for gendocs.GetDirs")
 	}
 	for _,v := range dirs {
-		err := os.Mkdir(fmt.Sprintf("../DocFxData/%s", v), 0644)
-		if err != nil {
-			return fmt.Errorf(err.Error())
+		path := filepath.Join("../DocFxData", fmt.Sprintf("%v", v))
+		data, errs := gendocs.GetData(v)
+		if errs != nil {
+			log.Fatalf(errs.Error())
+		}
+		errss := os.Chdir(fmt.Sprintf("%v", path))
+		if errss != nil {
+			return fmt.Errorf(errss.Error())
 
 		}
-		data, err := gendocs.GetData(v)
-		if err != nil {
-			log.Fatalf(err.Error())
-		}
-		err = os.Chdir("../DocFxData")
-		if err != nil {
-			return fmt.Errorf(err.Error())
-
-		}
-
 		gendocs.WriteMarkdownTerra(data)
 	}
 	return nil
