@@ -12,12 +12,13 @@ import (
 type GitlabData struct {
 	ProjectIds []string
 	Token string
+	UserName string
 }
 
 
-type ProjDatas []ProjectData
+type ProjDatas []GitlabProjectData
 
-type ProjectData struct {
+type GitlabProjectData struct {
 	Id                int         `json:"id"`
 	Description       string      `json:"description"`
 	Name              string      `json:"name"`
@@ -145,7 +146,7 @@ type ProjectData struct {
 func GetGitLabProjectData(p GitlabData)(ProjDatas, error){
 	var datas ProjDatas
 	for _, v := range p.ProjectIds {
-		var s ProjectData
+		var s GitlabProjectData
 		url := fmt.Sprintf("https://gitlab.com/api/v4/projects/%s", v)
 		method := "GET"
 
