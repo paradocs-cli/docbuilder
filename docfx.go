@@ -64,6 +64,10 @@ func GenerateDocFxStructure(r Repositories) error{
 }
 
 func BuildGitLabDocs(g GitlabData){
+	err := CreateDocFxDir()
+	if err != nil {
+		return 
+	}
 	data, err := GetGitLabProjectData(g)
 	if err != nil {
 		return
