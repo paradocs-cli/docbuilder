@@ -182,6 +182,13 @@ func GetGitLabProjectData(p GitlabData)(ProjDatas, error){
 }
 
 // GetGitlabRepos returns data of all the gitlab repos and underlying objects
-func GetGitlabRepos(){
-
+func GetGitlabRepos(p ProjDatas)([]string, error){
+	var repos []string
+for _, v := range p {
+	repos = append(repos, v.HttpUrlToRepo)
+}
+if len(repos) == 0 {
+	return repos, fmt.Errorf("no http urls found for git repos, PAT may be expired...")
+}
+return repos, nil
 }
