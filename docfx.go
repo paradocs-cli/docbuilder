@@ -20,7 +20,7 @@ func CloneGitlab(g GitlabData, urls []string)Repositories{
 				Provider string
 				RepoUrl  string
 			}{UserName: g.UserName, Pat: g.Token, RepoUrl: v },
-			LocalOptions: struct{ ClonePath string }{ClonePath: ".."},
+			LocalOptions: struct{ ClonePath string }{ClonePath: "../DocFxData"},
 		})
 		if err != nil {
 			return r
@@ -66,7 +66,7 @@ func GenerateDocFxStructure(r Repositories) error{
 func BuildGitLabDocs(g GitlabData){
 	err := CreateDocFxDir()
 	if err != nil {
-		return 
+		return
 	}
 	data, err := GetGitLabProjectData(g)
 	if err != nil {
