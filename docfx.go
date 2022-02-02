@@ -46,6 +46,10 @@ func GenerateDocFxStructure(r Repositories) error{
 	}
 	for _,v := range dirs {
 		path := filepath.Join("../DocFxData", fmt.Sprintf("%v", v))
+		mak := os.Mkdir(path, 0644)
+		if mak != nil {
+			return fmt.Errorf("%v", mak.Error())
+		}
 		data, errs := gendocs.GetData(v)
 		if errs != nil {
 			log.Fatalf(errs.Error())
