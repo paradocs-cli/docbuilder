@@ -78,11 +78,11 @@ func GenerateFxStruct(g GitlabData)error{
 			gendocs.WriteMarkdownTerra(data)
 		}
 
-		err = os.Chdir("../")
-		if err != nil {
-			return fmt.Errorf(err.Error())
-
-		}
+		//err = os.Chdir("../")
+		//if err != nil {
+		//	return fmt.Errorf(err.Error())
+		//
+		//}
 
 	}
 	return nil
