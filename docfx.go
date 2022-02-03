@@ -46,12 +46,13 @@ func GenerateFxStruct(g GitlabData)error{
 		return err
 	}
 
-	for _, v := range g.ProjectIds {
-		err := os.Chdir(fmt.Sprintf("%v", "../DocFxData"))
-		if err != nil {
-			return fmt.Errorf(err.Error())
+	err = os.Chdir(fmt.Sprintf("%v", "../DocFxData"))
+	if err != nil {
+		return fmt.Errorf(err.Error())
 
-		}
+	}
+
+	for _, v := range g.ProjectIds {
 
 		data, err := GetGitLabProjectData(v, g.Token)
 		if err != nil {
