@@ -1,4 +1,5 @@
 package docbuilder
+
 import (
 	"fmt"
 	"github.com/go-git/go-git/v5"
@@ -11,7 +12,7 @@ import (
 
 type Repositories []git.Repository
 
-func CloneGitlab(g GitlabData, urls []string)Repositories{
+func CloneGitlab(g GitlabData, urls []string) Repositories {
 	var r Repositories
 	for _, v := range urls {
 		spl := strings.Split(v, "/")
@@ -21,7 +22,7 @@ func CloneGitlab(g GitlabData, urls []string)Repositories{
 				Pat      string
 				Provider string
 				RepoUrl  string
-			}{UserName: g.UserName, Pat: g.Token, RepoUrl: v },
+			}{UserName: g.UserName, Pat: g.Token, RepoUrl: v},
 			LocalOptions: struct{ ClonePath string }{ClonePath: strings.ReplaceAll(spl[len(spl)-1], ".git", "")},
 		})
 		if err != nil {
@@ -31,7 +32,7 @@ func CloneGitlab(g GitlabData, urls []string)Repositories{
 	}
 	return r
 }
-func CreateDocFxDir() error{
+func CreateDocFxDir() error {
 	err := os.Mkdir("../DocFxData", 0644)
 	if err != nil {
 		return fmt.Errorf("%v", err.Error())
@@ -39,61 +40,48 @@ func CreateDocFxDir() error{
 	return nil
 }
 
-
-func GenerateDocFxStructure(g GitlabData, p ProjDatas) error{
+func GenerateDocFxStructure(g GitlabData, p ProjDatas) error {
 	err := CreateDocFxDir()
 	if err != nil {
 		return err
 	}
 
-	repos, err := GetGitlabRepos(p)
-	if err != nil {
-		return err
-	}
-
 	for _, v := range p {
-		for _, z := range repos {
-			if z == v.HttpUrlToRepo {
-				err := os.Chdir(fmt.Sprintf("%v", "../DocFxData"))
-				if err != nil {
-					return fmt.Errorf(err.Error())
+		err := os.Chdir(fmt.Sprintf("%v", "../DocFxData"))
+		if err != nil {
+			return fmt.Errorf(err.Error())
 
-				}
-
-				mak := os.MkdirAll(fmt.Sprintf("%s", v.Name), 0644)
-				if mak != nil {
-					return fmt.Errorf("%v", mak.Error())
-				}
-
-
-				err = os.Chdir(fmt.Sprintf("%s", v.Name))
-				if err != nil {
-					return fmt.Errorf(err.Error())
-
-				}
-
-				CloneGitlab(g, []string{v.HttpUrlToRepo})
-
-
-				dirs, err := gendocs.GetDirs(fmt.Sprintf("%s", v.Name))
-				if err != nil {
-					return fmt.Errorf("error reading directories for gendocs.GetDirs")
-				}
-				for _, v := range dirs {
-					data, errs := gendocs.GetData(v)
-					if errs != nil {
-						log.Fatalf(errs.Error())
-					}
-					gendocs.WriteMarkdownTerra(data)
-				}
-			}
 		}
 
+		mak := os.MkdirAll(fmt.Sprintf("%s", v.Name), 0644)
+		if mak != nil {
+			return fmt.Errorf("%v", mak.Error())
+		}
+
+		err = os.Chdir(fmt.Sprintf("%s", v.Name))
+		if err != nil {
+			return fmt.Errorf(err.Error())
+
+		}
+
+		CloneGitlab(g, []string{v.HttpUrlToRepo})
+
+		dirs, err := gendocs.GetDirs(fmt.Sprintf("%s", v.Name))
+		if err != nil {
+			return fmt.Errorf("error reading directories for gendocs.GetDirs")
+		}
+		for _, v := range dirs {
+			data, errs := gendocs.GetData(v)
+			if errs != nil {
+				log.Fatalf(errs.Error())
+			}
+			gendocs.WriteMarkdownTerra(data)
+		}
 	}
 	return nil
 }
 
-func BuildGitLabDocs(g GitlabData){
+func BuildGitLabDocs(g GitlabData) {
 	data, err := GetGitLabProjectData(g)
 	if err != nil {
 		return
