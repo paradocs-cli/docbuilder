@@ -79,6 +79,7 @@ func GenerateDocFxStructure(g GitlabData, p ProjDatas) error {
 			gendocs.WriteMarkdownTerra(data)
 		}
 	}
+	fmt.Println(len(p))
 	return nil
 }
 
