@@ -41,33 +41,27 @@ func CreateDocFxDir() error {
 }
 
 func GenerateDocFxStructure(g GitlabData, p ProjDatas) error {
-		repos, err := GetGitlabRepos(p)
-		if err != nil {
-			return err
-		}
-	for _, v := range repos {
-		spl := strings.Split(v, "/")
-
+	for _, v := range p {
 		err := os.Chdir(fmt.Sprintf("%v", "../DocFxData"))
 		if err != nil {
 			return fmt.Errorf(err.Error())
 
 		}
 
-		mak := os.MkdirAll(fmt.Sprintf("%s", strings.ReplaceAll(spl[len(spl)-1], ".git", "")), 0644)
+		mak := os.MkdirAll(fmt.Sprintf("%s", v.Name), 0644)
 		if mak != nil {
 			return fmt.Errorf("%v", mak.Error())
 		}
 
-		err = os.Chdir(fmt.Sprintf("%s", strings.ReplaceAll(spl[len(spl)-1], ".git", "")))
+		err = os.Chdir(fmt.Sprintf("%s", v.Name))
 		if err != nil {
 			return fmt.Errorf(err.Error())
 
 		}
 
-		CloneGitlab(g, []string{v})
+		CloneGitlab(g, []string{v.HttpUrlToRepo})
 
-		dirs, err := gendocs.GetDirs(fmt.Sprintf("%s", strings.ReplaceAll(spl[len(spl)-1], ".git", "")))
+		dirs, err := gendocs.GetDirs(fmt.Sprintf("%s", v.Name))
 		if err != nil {
 			return fmt.Errorf("error reading directories for gendocs.GetDirs")
 		}
@@ -79,7 +73,6 @@ func GenerateDocFxStructure(g GitlabData, p ProjDatas) error {
 			gendocs.WriteMarkdownTerra(data)
 		}
 	}
-	fmt.Println(len(p))
 	return nil
 }
 
@@ -94,6 +87,7 @@ func BuildGitLabDocs(g GitlabData) {
 	if err != nil {
 		return
 	}
+	fmt.Println(len(data))
 
 	//repos, err := GetGitlabRepos(data)
 	//if err != nil {
