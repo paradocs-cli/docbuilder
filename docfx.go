@@ -59,7 +59,7 @@ func GenerateFxStruct(g GitlabData)error{
 			return err
 		}
 
-		mak := os.MkdirAll(fmt.Sprintf("%s", data.Name), 0644)
+		mak := os.Mkdir(fmt.Sprintf("%s", data.Name), 0644)
 		if mak != nil {
 			return fmt.Errorf("%v", mak.Error())
 		}
