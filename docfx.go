@@ -41,10 +41,6 @@ func CreateDocFxDir() error {
 }
 
 func GenerateFxStruct(g GitlabData)error{
-	err := CreateDocFxDir()
-	if err != nil {
-		return err
-	}
 
 	for _, v := range g.ProjectIds {
 		data, err := GetGitLabProjectData(v, g.Token)
