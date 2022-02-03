@@ -48,13 +48,18 @@ func GenerateDocFxStructure(g GitlabData, p ProjDatas) error {
 
 		}
 
-		CloneGitlab(g, []string{v.HttpUrlToRepo})
+		mak := os.MkdirAll(fmt.Sprintf("%s", v.Name), 0644)
+		if mak != nil {
+			return fmt.Errorf("%v", mak.Error())
+		}
 
 		err = os.Chdir(fmt.Sprintf("%s", v.Name))
 		if err != nil {
 			return fmt.Errorf(err.Error())
 
 		}
+
+		CloneGitlab(g, []string{v.HttpUrlToRepo})
 
 		dirs, err := gendocs.GetDirs(fmt.Sprintf("%s", v.Name))
 		if err != nil {
@@ -72,6 +77,12 @@ func GenerateDocFxStructure(g GitlabData, p ProjDatas) error {
 }
 
 func BuildGitLabDocs(g GitlabData) {
+
+	err := CreateDocFxDir()
+	if err != nil {
+		return
+	}
+
 	data, err := GetGitLabProjectData(g)
 	if err != nil {
 		return
