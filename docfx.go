@@ -77,6 +77,7 @@ func GenerateFxStruct(g GitlabData)error{
 			return fmt.Errorf("error reading directories for gendocs.GetDirs")
 		}
 		for _, v := range dirs {
+			fmt.Println(v)
 			data, errs := gendocs.GetData(v)
 			if errs != nil {
 				log.Fatalf(errs.Error())
