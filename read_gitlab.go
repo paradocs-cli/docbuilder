@@ -143,11 +143,9 @@ type GitlabProjectData struct {
 	} `json:"permissions"`
 }
 
-func GetGitLabProjectData(p GitlabData)(ProjDatas, error){
-	var datas ProjDatas
-	for _, v := range p.ProjectIds {
+func GetGitLabProjectData(p string, t string)(GitlabProjectData, error){
 		var s GitlabProjectData
-		url := fmt.Sprintf("https://gitlab.com/api/v4/projects/%s", v)
+		url := fmt.Sprintf("https://gitlab.com/api/v4/projects/%s", p)
 		method := "GET"
 
 		client := &http.Client {
@@ -155,13 +153,13 @@ func GetGitLabProjectData(p GitlabData)(ProjDatas, error){
 		req, err := http.NewRequest(method, url, nil)
 
 		if err != nil {
-			return datas, fmt.Errorf("%v",err.Error())
+			return s, fmt.Errorf("%v",err.Error())
 		}
-		req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", p.Token))
+		req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", t))
 
 		res, err := client.Do(req)
 		if err != nil {
-			return datas, fmt.Errorf("%v",err.Error())
+			return s, fmt.Errorf("%v",err.Error())
 		}
 		defer func(Body io.ReadCloser) {
 			err := Body.Close()
@@ -171,15 +169,13 @@ func GetGitLabProjectData(p GitlabData)(ProjDatas, error){
 
 		body, err := ioutil.ReadAll(res.Body)
 		if err != nil {
-			return datas, fmt.Errorf("%v",err.Error())
+			return s, fmt.Errorf("%v",err.Error())
 		}
 		err = json.Unmarshal(body, &s)
 		if err != nil {
-			return datas, fmt.Errorf("%v",err.Error())
+			return s, fmt.Errorf("%v",err.Error())
 		}
-		datas = append(datas, s)
-	}
-	return datas, nil
+	return s, nil
 }
 
 // GetGitlabRepos returns data of all the gitlab repos and underlying objects
