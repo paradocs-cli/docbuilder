@@ -3,7 +3,7 @@ package docbuilder
 import (
 	"fmt"
 	"github.com/go-git/go-git/v5"
-	gendocs "github.com/johhess40/generatedocs"
+	gendocs "github.com/paradocs-cli/generatedocs"
 	"github.com/paradocs-cli/gengit"
 	"log"
 	"os"
