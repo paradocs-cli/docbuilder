@@ -41,11 +41,6 @@ func CreateDocFxDir() error {
 }
 
 func GenerateDocFxStructure(g GitlabData, p ProjDatas) error {
-	err := CreateDocFxDir()
-	if err != nil {
-		return err
-	}
-
 	for _, v := range p {
 		err := os.Chdir(fmt.Sprintf("%v", "../DocFxData"))
 		if err != nil {
@@ -82,6 +77,12 @@ func GenerateDocFxStructure(g GitlabData, p ProjDatas) error {
 }
 
 func BuildGitLabDocs(g GitlabData) {
+
+	err := CreateDocFxDir()
+	if err != nil {
+		return
+	}
+
 	data, err := GetGitLabProjectData(g)
 	if err != nil {
 		return
