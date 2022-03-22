@@ -40,7 +40,7 @@ func CreateDocFxDir() error {
 	return nil
 }
 
-func GenerateFxStruct(g GitlabData)error{
+func GenerateFxStruct(g GitlabData) error {
 
 	for _, v := range g.ProjectIds {
 		data, err := GetGitLabProjectData(v, g.Token)
@@ -71,7 +71,7 @@ func GenerateFxStruct(g GitlabData)error{
 			if errs != nil {
 				log.Fatalf(errs.Error())
 			}
-			gendocs.WriteMarkdownTerra(data)
+			gendocs.WriteMarkdownTerra(data, ".")
 		}
 
 		err = os.Chdir("..")
@@ -84,7 +84,7 @@ func GenerateFxStruct(g GitlabData)error{
 	return nil
 }
 
-func BuildGitLabDocs(g GitlabData) error{
+func BuildGitLabDocs(g GitlabData) error {
 	err := GenerateFxStruct(g)
 	if err != nil {
 		return err
